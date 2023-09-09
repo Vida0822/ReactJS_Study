@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <span>Total clicks : 0 </span>
+    <button id="btn">Click me</button>
+
+    <script>
+      var counter = 0; // 이거 0 안해주면 NaN(var은 괜찮)
+
+      const button = document.getElementById("btn");
+      const span = document.querySelector("span");
+
+      function handleClick() {
+        //        console.log("I have been click");
+        //    alert(counter); // undefined - '값이 없다'
+        counter = counter + 1; // NaN - '이상한 값이다' : 없는 값(undefined)에 +1을 더해주니 NaN 나옴
+        span.innerText = `Total clicks : ${counter}`;
+      }
+      button.addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
