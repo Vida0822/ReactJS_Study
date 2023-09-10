@@ -73,3 +73,212 @@ useSyncExternalStore: ƒ (a,b,c){return g.current.useSyncExternalStore(a,b,c)}
 useTransition: ƒ (){return g.current.useTransition()}
 version: '18.2.0'
 [[Prototype]]: Object
+
+```
+
+
+
+
+
+## 2. THE BASICS OF REACT
+
+
+
+### React 사용 이유
+
+
+
+#### 1. React JS 가 Element 를 다루는 방식 때문! 
+
+*  react-dom : React element 를 html에 두는 역할
+
+  (vs React js : 어플리케이션이 interactive하도록 만들어주는 library !)
+
+=> html 을 페이지에 직접 작성하지 않음
+
+=> java script를 활용해 element 생성
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+
+  <!--하드 코딩으로 React 적용되게 만듬 -> 나중엔 이런 모든 것이 포함된 React JS 프로젝트 만드는법 배움 ! -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <script>
+     //어려운 방법 (사용 x) -> but 이해해야 rect 본질 이해 가능 
+    const root = document.getElementById("root"); 
+    const span = React.createElement(
+      "span",
+      { id: "sexy-span", style: { color: "red" } }, // 두번째 argument : span의 property
+      "Hello I'm span" //  세번째 argument : content
+    );
+    ReactDOM.createRoot(root).render(span); // render : show to user (what, where)
+
+  </script>
+</html>
+
+```
+
+
+
+=> body html에 div 빼고 아무것도 작성해주지 않았지만 실제로 속성까지 다 갖춘 span태그 생성 됨 
+
+
+
+##### React의 동작 원리 ** 
+
+* 기존 바닐라 js : html로 --> javascript --> html 
+
+  ​			; html을 만들고, 찾아서 가져오고, 그걸 가져와 작업(편집)해 다시 html로 update
+
+* React js : js ---> html 
+
+  ​		; react가 여러가지 작업을 처리 한후 html 결과물을 업데이트) 
+
+  ​		=> html 코드를 작성할 필요 없음 (user한테 보여줄 내용 control 가능)
+
+
+
+##### 주요 함수 
+
+```javascript
+// 1.  createElement (요소명, property or event , content ) : 여러 설정작업과 함께 요소 생성 
+React.createElement(
+      "span",
+      { id: "sexy-span", style: { color: "red" } },
+      "Hello I'm span"
+    );
+
+// 2. createRoot() : dom 을 작성할 root를 지정 
+const root = ReactDOM.createRoot(root)
+
+// 3. render() : 사용자(화면)에 보여줌 <-> html에 실제로 작성함
+root.render(span); 
+```
+
+
+
+
+
++) error
+
+```javascript
+React.createElement("root") //  --> Minified React error #299 ("root" 라는 이름의 html 태그는 없으니 찾질 못함)
+```
+
+
+
+
+
+#### 2. 이벤트 Listen 
+
+프론트 개발자 목적 : interactive web page , 즉 eventListen에 따른 반응처리가 목적임을 암
+
+=> 이걸 React는 알고 있음 ! -->  event를 훨씬 편한 방식으로 등록하도록 해줌 !!
+
+=> // java script로 요소를 만들고 html로 바꾸는 방식의 장점
+
+
+
+#### Vanila js VS React js - 버튼 만들기
+
+##### Vanila js
+
+````html
+<!DOCTYPE html>
+<html>
+  <body>
+    <span>Total clicks : 0 </span>
+    <button id="btn">Click me</button>
+
+    <script>
+      var counter = 0; // 이거 0 안해주면 NaN(var은 괜찮)
+
+      const button = document.getElementById("btn");
+      const span = document.querySelector("span");
+
+      function handleClick() {
+        counter = counter + 1; 
+        span.innerText = `Total clicks : ${counter}`;
+      }
+      button.addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
+
+````
+
+html 문서에 span 태그 작성
+
+ --> html 문서에 button 태그 작성
+
+ --> get ElementByID로 span태그 가져오기
+
+ --> get ElementByID로 button태그 가져오기
+
+--> 핸들러 함수 생성 
+
+--> addEventLister로 버튼에 event 걸어주기 
+
+--> 다시 html 에 반영 
+
+
+
+**vs** 
+
+##### React js
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <script>
+    const root = document.getElementById("root");
+    const h3 = React.createElement(
+      "h3",
+      {
+        onMouseEnter: () => console.log("mouse enter"),
+      },
+      "Hello I'm span"
+    );
+
+    const btn = React.createElement(
+      "button",
+      {
+        // property에 eventListener 속성 줌!
+        onClick: () => console.log("i'm clicked"),
+        // but 얘는 실제 html 태그에 표시되진 않음 (얘는 html에 표시할 필요가 없는 정보임을 react 는 암) , 반면 id 속성을 두면 web tag 에 표시됨 : 이 preperty는 html에 놓여야하는것을 암 (알아서 문서 구성잘해줌! )
+        // <-> on 어쩌구는 두지 않음
+        style: {
+          backgroundColor: "tomato",
+        },
+      },
+      "Click me"
+    );
+    // React로 but on 요소를 만드니 한 문장안에 content도 넣고, property도 지정하고 심지어 eventListener까지 지정 가능 !
+
+
+    const container = React.createElement("div", null, [h3, btn]);
+    // content으로 두개 태그 넣어줌 (배열 형태) - 두개의 component를 가진 component를 생성해줌 !
+    ReactDOM.createRoot(root).render(container);
+  </script>
+</html>
+
+```
+
+h3 태그 생성 (+ 이벤트 걸어줌, content 작성함 )
+
+--> button 태그 생성 (+ 이벤트 걸어줌, 스타일 속성줌 ,content 작성함)
+
+--> html 태그에 작성해줌 

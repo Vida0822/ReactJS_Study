@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <body></body>
+  <body>
+    <div id="root"></div>
+  </body>
+
+  <!--하드 코딩으로 React 적용되게 만듬 -> 나중엔 이런 모든 것이 포함된 React JS 프로젝트 만드는법 배움 ! -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
   <script>
-    React.cscscs;
+    const root = document.getElementById("root");
+    const h3 = React.createElement(
+      "h3",
+      {
+        onMouseEnter: () => console.log("mouse enter"),
+      },
+      "Hello I'm span"
+    );
+
+    const btn = React.createElement(
+      "button",
+      {
+        // property에 eventListener 속성 줌!
+        onClick: () => console.log("i'm clicked"),
+        // but 얘는 실제 html 태그에 표시되진 않음 (얘는 html에 표시할 필요가 없는 정보임을 react 는 암) , 반면 id 속성을 두면 web tag 에 표시됨 : 이 preperty는 html에 놓여야하는것을 암 (알아서 문서 구성잘해줌! )
+        // <-> on 어쩌구는 두지 않음
+        style: {
+          backgroundColor: "tomato",
+        },
+      },
+      "Click me"
+    );
+    // React로 but on 요소를 만드니 한 문장안에 content도 넣고, property도 지정하고 심지어 eventListener까지 지정 가능 !
+    // java script로 요소를 만들고 html로 바꾸는 방식의 장점
+    // React 개발자는 우리의 목적을 암 : interactive web page , 즉 eventListen에 따른 반응처리가 목적임을 암
+    // => property에서 event를 편하게 등록하도록 해줌 !!
+
+    const container = React.createElement("div", null, [h3, btn]);
+    // content으로 두개 태그 넣어줌 (배열 형태) - 두개의 component를 가진 component를 생성해줌 !
+    ReactDOM.createRoot(root).render(container);
   </script>
 </html>
