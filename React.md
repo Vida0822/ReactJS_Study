@@ -80,13 +80,11 @@ version: '18.2.0'
 
 
 
-## 2. THE BASICS OF REACT
+## 2. THE BASICS OF REACT ()
 
+###  
 
-
-### React 사용 이유
-
-
+### 1. React 사용 이유 : By createElement (어려운 방식)
 
 #### 1. React JS 가 Element 를 다루는 방식 때문! 
 
@@ -282,3 +280,212 @@ h3 태그 생성 (+ 이벤트 걸어줌, content 작성함 )
 --> button 태그 생성 (+ 이벤트 걸어줌, 스타일 속성줌 ,content 작성함)
 
 --> html 태그에 작성해줌 
+
+
+
+* react JS --> interactive power (element 생성, add event Listener )8 
+
+* React Dom --> Element를 가져다 html 로 바꿔줌 
+
+
+
+
+
+### 2. createElement 대체 : jsx (대부분 사용)
+
+* 더 comportable tool : jsx (js 확장 문법)
+
+* 생긴게 html과 비슷해 더 편리 (우린 앞에서 jsx의 내부동작을 본거임)
+
+==> 우리는 인간 친화적인 jsx 코드로 소스코드를 작성하고, 변환기가 그걸  브라우저가 이해할 수 있는 코드로 바꿔서 전달 
+
+​	(**jsx --> Bebel --> 브라우저**)
+
+
+
+#### 1. 변환기 설치 : Babel standalone
+
+​	 = jsx 코드를 : jsx 로 적은 코드가createElement 형식으로 내부적으로 바꿔서 브라우저에 전달) 
+
+​      --> createElement 로 바꿔서 브라우저에 전달
+
+* 브라우저가 JSX를 이해할 수 있게 뭔가를 설치 
+
+```html
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> <!--1-->
+
+<script type="text/babel"> // 2 
+	// 스크립트 코드   
+</script> 
+```
+
+
+
+#### 2. jsx 로 Element 만들기 
+
+```react
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    const title = (
+      <h3 id="title" onMouseEnter={() => console.log("MouseEnter")}>
+        "Hello I'm title"
+      </h3>
+    ); // 진짜 html 문법으로 적어주면 됨! (그전 바닐라 js에는 문자를 만들어 올려주는 기능 )
+
+    const btn = (
+      <button
+        style={{
+          backgroundColor: "tomato",
+        }}
+        onClick={() => console.log("im clicked")}
+      >
+        Click me
+      </button>
+    );
+
+    const Container = React.createElement("div", null, [title, btn]);
+    ReactDOM.createRoot(root).render(container);
+  </script>
+
+```
+
+
+
+=> 브라우저에 전달 된 코드 : 우리가 앞에서 배운 코드로 변환 
+
+```html
+<head><script>
+"use strict";
+
+var root = document.getElementById("root");
+var title = /*#__PURE__*/React.createElement("h3", {
+  id: "title",
+  onMouseEnter: function onMouseEnter() {
+    return console.log("MouseEnter");
+  }
+}, "\"Hello I'm title\""); // 진짜 html 문법으로 적어주면 됨! (그전 바닐라 js에는 문자를 만들어 올려주는 기능 )
+
+var btn = /*#__PURE__*/React.createElement("button", {
+  style: {
+    backgroundColor: "tomato"
+  },
+  onClick: function onClick() {
+    return console.log("im clicked");
+  }
+}, "Click me");
+var container = React.createElement("div", null, [title, btn]);
+</script></head>
+```
+
+
+
+
+
+#### 3. jsx로 컴포넌트 in another 컴포넌트 
+
+** **중요 : 직접 만든 컴포넌트를 다른 곳에서 사용할 때는 반!드!시! 대문자로 (아님 일반 html 요소와 헷갈림) ** 
+
+=> jsx는 어플리케이션을 여러가지 작은 요소로 나누어 관리할 수 있게 해준다 ! 
+
+ (seperate  : 코드(요소 생성)를 분리 한 후 함께 랜더링 ) 
+
+
+
+```react
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+
+  <!--하드 코딩으로 React 적용되게 만듬 -> 나중엔 이런 모든 것이 포함된 React JS 프로젝트 만드는법 배움 ! -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    function Title() {
+      return (
+        <h3 id="title" onMouseEnter={() => console.log("MouseEnter")}>
+          "Hello I'm title"
+        </h3>
+      );
+    }
+
+    const Button = () => (
+      <button
+        style={{
+          backgroundColor: "tomato",
+        }}
+        onClick={() => console.log("im clicked")}
+      >
+        Click me
+      </button>
+    );
+
+    // 만들어진 react로 태그들을 다른 태그에 포함하는 과정
+    //  const Container = <div>title Button</div>;
+    const Container = () => (
+      // 위에 정의해준 Title 을 가져와 넣어주는 jsx의 문법
+      // 대문자여야야함 : 아니면 그냥 일반 html 태그 종류 (html 버튼 ) 이라고 생각
+      // 여기에서 작성해준 button임을 알릴려면 무조건 uppercase로 앞글자 맞춰줘야함
+      <div>
+        <Title />
+        <Button />
+      </div>
+    );
+    ReactDOM.createRoot(root).render(<Container />);
+  </script>
+</html>
+
+```
+
+
+
+=> 브라우저에 전달된 코드 (create Element 투성이 --> jsx 없었으면 이렇게 작성해야함 )
+
+```html
+<head><script>"use strict";
+
+var root = document.getElementById("root");
+function Title() {
+  return /*#__PURE__*/React.createElement("h3", {
+    id: "title",
+    onMouseEnter: function onMouseEnter() {
+      return console.log("MouseEnter");
+    }
+  }, "\"Hello I'm title\"");
+}
+var Button = function Button() {
+  return /*#__PURE__*/React.createElement("button", {
+    style: {
+      backgroundColor: "tomato"
+    },
+    onClick: function onClick() {
+      return console.log("im clicked");
+    }
+  }, "Click me");
+};
+
+// 만들어진 react로 태그들을 다른 태그에 포함하는 과정
+//  const Container = <div>title Button</div>;
+var Container = function Container() {
+  return (
+    /*#__PURE__*/
+    // 위에 정의해준 Title 을 가져와 넣어주는 jsx의 문법
+    // 대문자여야야함 : 아니면 그냥 일반 html 태그 종류 (html 버튼 ) 이라고 생각
+    // 여기에서 작성해준 button임을 알릴려면 무조건 uppercase로 앞글자 맞춰줘야함
+    React.createElement("div", null, /*#__PURE__*/React.createElement(Title, null), /*#__PURE__*/React.createElement(Button, null))
+  );
+};
+ReactDOM.createRoot(root).render( /*#__PURE__*/React.createElement(Container, null));
+</script>
+</head>
+```
+
